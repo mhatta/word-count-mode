@@ -29,4 +29,4 @@ Tomasz Skutnik (@tomaszskutnik) salvaged and updated word-count-mode for Emacs24
 
  Licensed under the same terms as Emacs.
 
-(word-count-mode was originally released unde GPL2, but changed license with the blessing of the original author).
+(word-count-mode was originally released under GPL2, but changed license with the blessing of the original author).
