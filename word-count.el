@@ -1,4 +1,4 @@
-;;; word-count.el --- show the number of characters/words/lines in the mode line. -*- lexical-binging: t -*-
+;;; word-count.el --- show the number of words in the mode line. -*- lexical-binging: t -*-
 
 ;; Copyright (C) 2012-2018 Hiroyuki Komatsu
 
