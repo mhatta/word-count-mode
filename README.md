@@ -1,6 +1,6 @@
 # word-count-mode
 
-Shows the number of words/characters of the current buffer in the mode line.
+Shows the number of characters/words/lines of the current buffer in the mode line.
 
 # Usage
 
