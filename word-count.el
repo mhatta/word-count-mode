@@ -34,6 +34,7 @@
     (defconst word-count-running-xemacs nil))
 
 (defun word-count-check-value (value)
+  "Check VALUE."
   (and (boundp value)
        (symbol-value value)))
 
@@ -55,12 +56,14 @@
 
 ;; Define word-count-transient-region-active-p
 (defun word-count-transient-region-active-p ()
+  "Define word-count-transient-region-active-p."
   (and (word-count-transient-mode-p)
        (word-count-region-active-p)))
 
 ;; ------------------------------------------------------------
 
 (defun word-count-marker-set (marker &optional position buffer type)
+  "Set MARKER for counting words at POSITION in BUFFER TYPE."
   (or (markerp (eval marker))
       (set marker (make-marker)))
   (or position
@@ -70,6 +73,7 @@
   )
 
 (defun word-count-defvar (symbol value &optional doc-string)
+  "Set SYMBOL VALUE DOC-STRING."
   (if (not (boundp symbol))
       (set symbol value))
   (if doc-string
@@ -77,11 +81,13 @@
   symbol)
 
 (defun word-count-defvar-locally (symbol initvalue &optional docstring)
+  "Set locally SYMBOL INITVALUE DOCSTRING."
   (word-count-defvar symbol initvalue docstring)
   (make-variable-buffer-local symbol)
   symbol)
 
 (defun word-count-set-minor-mode (name modeline &optional key-map)
+  "Set NAME MODELINE KEY-MAP."
   (make-variable-buffer-local name)
   (setq minor-mode-alist
 	(word-count-alist-add minor-mode-alist (list name modeline)))
@@ -92,12 +98,14 @@
   )
 
 (defun word-count-point-at-bop (&optional point)
+  "Set POINT."
   (save-excursion
     (goto-char (or point (point)))
     (backward-paragraph 1)
     (point)))
 
 (defun word-count-point-at-eop (&optional point)
+  "Set POINT."
   (save-excursion
     (goto-char (or point (point)))
     (forward-paragraph 1)
@@ -106,8 +114,9 @@
 ;; word-count-alist ------------------------------------------------------------
 
 (defun word-count-alist-add! (alist new-cons)
+  "Set ALIST NEW-CONS."
   (if (null alist)
-      (error "word-count-alist-add! can not deal nil as an alist.")
+      (error "Word-count-alist-add! can not deal nil as an alist")
     (let ((current-cons (assoc (car new-cons) alist)))
       (if current-cons
 	  (setcdr current-cons (cdr new-cons))
@@ -118,6 +127,7 @@
       alist)))
   
 (defun word-count-alist-add (alist new-cons)
+  "Set ALIST NEW-CONS."
   (if (null alist)
       (list new-cons)
     (let ((return-alist (copy-alist alist)))
@@ -125,6 +135,7 @@
       return-alist)))
   
 (defun word-count-alist-delete (alist key)
+  "Set ALIST KEY."
   (if key
       (let (return-alist)
 	(mapcar #'(lambda (x)
@@ -158,7 +169,7 @@
       )
     (setq match-list (append '(0) match-list (list (length string))))
     (while match-list
-      (setq splited-list 
+      (setq splited-list
 	    (cons (substring string (nth 0 match-list) (nth 1 match-list))
 		  splited-list))
       (setq match-list (nthcdr 2 match-list))
@@ -178,6 +189,7 @@
 ;; word-count-match ------------------------------------------------------------
 
 (defun word-count-match-count-string (regexp string)
+  "Set REGEXP STRING."
   (save-match-data
     (let ((i 0) (n 0))
       (while (and (string-match regexp string i) (< i (match-end 0)))
@@ -201,6 +213,7 @@
 ;; word-count-sign ------------------------------------------------------------
 
 (defun word-count-color-find (color-name &optional alt-tty-color-num)
+  "Set COLOR-NAME ALT-TTY-COLOR-NUM."
   (if window-system color-name
     (and (functionp 'find-tty-color)
 	 (or (and color-name (find-tty-color color-name))
@@ -209,6 +222,7 @@
 
 (defvar word-count-sign-marker-overlay-alist (list nil))
 (defun word-count-sign-marker (marker &optional face)
+  "Set MARKER FACE."
   (let ((overlay (cdr (assoc marker word-count-sign-marker-overlay-alist)))
 	(start (min marker (1- (point-max)))) ;; for EOB
 	(end (min (1+ marker) (point-max))))
@@ -223,6 +237,7 @@
     ))
 
 (defun word-count-sign-marker-off (marker)
+  "Set MARKER."
   (let ((overlay (cdr (assoc marker word-count-sign-marker-overlay-alist))))
     (if overlay
 	(delete-overlay overlay))
@@ -232,12 +247,14 @@
     ))
 
 (defun word-count-sign-marker-redisplay ()
-  (mapcar 
+  "Set."
+  (mapcar
    #'(lambda (cons) (word-count-sign-marker (car cons)))
    word-count-sign-marker-overlay-alist))
 
 (defvar word-count-sign-region-overlay-alist (list nil))
 (defun word-count-sign-region (start end &optional buffer face)
+  "Set START END BUFFER FACE."
   (or buffer (setq buffer (current-buffer)))
   (let* ((region (list start end buffer))
 	 (overlay (cdr (assoc region word-count-sign-region-overlay-alist))))
@@ -251,6 +268,7 @@
     ))
 
 (defun word-count-sign-region-off (start end &optional buffer)
+  "Set START END BUFFER."
   (or buffer (setq buffer (current-buffer)))
   (let* ((region (list start end buffer))
 	 (overlay (cdr (assoc region word-count-sign-region-overlay-alist))))
@@ -281,7 +299,7 @@ A pair with 't' is a default.")
 (defcustom word-count-modeline-string " WC:"
 				  "String of modeline for word-count mode.")
 (defcustom word-count-mode-hook nil
-  "Function or functions called when word-count-mode is executed.")
+  "Function or functions called when ‘word-count-mode’ is executed.")
 (defcustom word-count-mode-init-hook nil
   "Function or functions called when word-count.el is loaded.")
 
@@ -323,8 +341,9 @@ A pair with 't' is a default.")
 (word-count-defvar-locally 'word-count-marker-end nil)
 
 (defun word-count-mode (&optional arg)
+  "Set ARG."
   (interactive "P")
-  (setq word-count-mode 
+  (setq word-count-mode
 	(if (null arg) (not word-count-mode) (> (prefix-numeric-value arg) 0)))
   (if word-count-mode
       (word-count-mode-on)
@@ -333,6 +352,7 @@ A pair with 't' is a default.")
   )
 
 (defun word-count-mode-on ()
+  "Set."
   (interactive)
   (setq word-count-mode t)
   (if (word-count-transient-region-active-p)
@@ -342,6 +362,7 @@ A pair with 't' is a default.")
   )
 
 (defun word-count-mode-off ()
+  "Set."
   (interactive)
   (setq word-count-mode nil)
   (remove-hook 'post-command-hook 'word-count-modeline-display t)
@@ -350,6 +371,7 @@ A pair with 't' is a default.")
   )
 
 (defun word-count-set-area ()
+  "Set."
   (interactive)
   (or word-count-mode
       (word-count-mode))
@@ -359,6 +381,7 @@ A pair with 't' is a default.")
     ))
 
 (defun word-count-set-marker ()
+  "Set."
   (interactive)
   (or word-count-mode (word-count-mode))
   (word-count-set-region-off)
@@ -367,10 +390,12 @@ A pair with 't' is a default.")
   )
 
 (defun word-count-set-marker-off ()
+  "Set."
   (word-count-sign-marker-off word-count-marker-beginning)
   )
 
 (defun word-count-set-region ()
+  "Set."
   (interactive)
   (or word-count-mode (word-count-mode))
   (word-count-set-marker-off)
@@ -387,6 +412,7 @@ A pair with 't' is a default.")
   )
 
 (defun word-count-set-region-off ()
+  "Set."
   (word-count-sign-region-off word-count-marker-beginning word-count-marker-end)
   (and (markerp word-count-marker-end)
        (set-marker word-count-marker-end nil))
@@ -394,11 +420,13 @@ A pair with 't' is a default.")
   )
 
 (defun word-count-modeline-display ()
+  "Set."
   (setq word-count-modeline (word-count-modeline-create))
   (force-mode-line-update)
   )
 
 (defun word-count-modeline-create ()
+  "Set."
   (let ((beginning word-count-marker-beginning)
 	(end (or word-count-marker-end (point))))
     (concat
@@ -409,9 +437,11 @@ A pair with 't' is a default.")
      )))
 
 (defun word-count-CWL-region (&optional start end)
+  "Set START END."
   (word-count-CWL-string (word-count-buffer-substring start end)))
 
 (defun word-count-CWL-string (string)
+  "Set STRING."
   (setq string (word-count-preremove-string string))
   (list
    (word-count-characters-string string t)
@@ -420,21 +450,26 @@ A pair with 't' is a default.")
    ))
 
 (defun word-count-characters-region (&optional start end)
+  "Set START END."
   (word-count-characters-string (word-count-buffer-substring start end)))
 
 (defun word-count-words-region (&optional start end)
+  "Set START END."
   (word-count-words-string (word-count-buffer-substring start end)))
 
 (defun word-count-lines-region (&optional start end)
+  "Set START END."
   (word-count-lines-string (word-count-buffer-substring start end)))
 
 (defun word-count-buffer-substring (&optional start end)
+  "Set START END."
   (or start (setq start (region-beginning)))
   (or end (setq end (region-end)))
   (buffer-substring start end))
 
 
 (defun word-count-characters-string (string &optional nopreremove)
+  "Set STRING NOPREREMOVE."
   (or nopreremove
       (setq string (word-count-preremove-string string)))
   (- (length string)
@@ -442,11 +477,13 @@ A pair with 't' is a default.")
      ))
 
 (defun word-count-words-string (string &optional nopreremove)
+  "Set STRING NOPREREMOVE."
   (or nopreremove
       (setq string (word-count-preremove-string string)))
   (word-count-match-count-string word-count-word-regexp string))
 
 (defun word-count-lines-string (string &optional nopreremove)
+  "Set STRING NOPREREMOVE."
   (or nopreremove
       (setq string (word-count-preremove-string string)))
   (- (1+ (word-count-match-count-string
@@ -456,6 +493,7 @@ A pair with 't' is a default.")
 
 
 (defun word-count-preremove-string (string &optional patterns)
+  "Set STRING PATTERNS."
   (mapcar #'(lambda (pattern)
 	     (setq string (word-count-string-replace string pattern " ")))
 	  (or patterns
