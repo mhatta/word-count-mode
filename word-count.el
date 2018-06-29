@@ -138,7 +138,7 @@
   "Delete ALIST KEY."
   (if key
       (let (return-alist)
-	(mapcar #'(lambda (x)
+	(mapc #'(lambda (x)
 		   (or (equal key (car x))
 		       (setq return-alist (cons x return-alist))))
 		alist)
@@ -284,38 +284,41 @@
 ;; ----------------------------------------------------------------------
 
 (defcustom word-count-non-character-regexp "[\n\t ]"
-  "Regexp what is not counted as characters.")
+  "Regexp what is not counted as characters." :group 'word-count)
 (defcustom word-count-word-regexp "[a-z0-9_-]+"
-  "Regexp what is counted as words.")
+  "Regexp what is counted as words." :group 'word-count)
 (defcustom word-count-non-line-regexp "^[\t ]*\n\\|^[\t ]+$"
-  "Regexp what is not counted as lines.")
+  "Regexp what is not counted as lines." :group 'word-count)
 (defcustom word-count-preremove-regexp-alist
   '((latex-mode . ("\\\\%" "%.*$")) (tex-mode . ("\\\\%" "%.*$"))
     (html-mode . ("<[^>]*>")) (sgml-mode . ("<[^>]*>"))
     (t . nil))
   "Regexp alist what is used by preremove operation.
 These regexps are replaced to one space (ie '\\\\%' -> ' ', '%.*$' -> ' ').
-A pair with 't' is a default.")
+A pair with 't' is a default." :group 'word-count)
 (defcustom word-count-modeline-string " WC:"
-				  "String of modeline for word-count mode.")
+  "String of modeline for word-count mode."
+  :group 'word-count)
 (defcustom word-count-mode-hook nil
-  "Function or functions called when ‘word-count-mode’ is executed.")
+  "Function or functions called when ‘word-count-mode’ is executed."
+  :group 'word-count)
 (defcustom word-count-mode-init-hook nil
-  "Function or functions called when word-count.el is loaded.")
+  "Function or functions called when word-count.el is loaded."
+  :group 'word-count)
 
 (defcustom word-count-marker-foreground (word-count-color-find "#D0D0D0" 7)
-  "Color for word-count mode.")
+  "Color for word-count mode." :group 'word-count)
 (defcustom word-count-marker-background (word-count-color-find "#5050A0" 3)
-  "Color for word-count mode.")
+  "Color for word-count mode." :group 'word-count)
 (defcustom word-count-region-foreground (word-count-color-find "#D0D0D0" 7)
-  "Color for word-count mode.")
+  "Color for word-count mode." :group 'word-count)
 (defcustom word-count-region-background (word-count-color-find "#5050A0" 3)
-  "Color for word-count mode.")
+  "Color for word-count mode." :group 'word-count)
 
 (if (not (boundp 'word-count-marker-face))
     (progn
       (defcustom word-count-marker-face (make-face 'word-count-marker-face)
-	"Face for word-count mode.")
+	"Face for word-count mode." :group 'word-count)
       (set-face-foreground word-count-marker-face word-count-marker-foreground)
       (set-face-background word-count-marker-face word-count-marker-background)
       ))
@@ -323,7 +326,7 @@ A pair with 't' is a default.")
 (if (not (boundp 'word-count-region-face))
     (progn
       (defcustom word-count-region-face (make-face 'word-count-region-face)
-	"Face for word-count mode.")
+	"Face for word-count mode." :group 'word-count)
       (set-face-foreground word-count-region-face word-count-region-foreground)
       (set-face-background word-count-region-face word-count-region-background)
       ))
@@ -494,7 +497,7 @@ A pair with 't' is a default.")
 
 (defun word-count-preremove-string (string &optional patterns)
   "Count preremove string in STRING PATTERNS."
-  (mapcar #'(lambda (pattern)
+  (mapc #'(lambda (pattern)
 	     (setq string (word-count-string-replace string pattern " ")))
 	  (or patterns
 	      (word-count-alist-get-value major-mode
